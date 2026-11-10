@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Регистрация' if mode == 'register' else 'Вход' }} — Найди компанию{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-panel">
+    <div class="eyebrow">РАДЫ ТЕБЯ ВИДЕТЬ</div>
+    <h1>{{ 'Создай аккаунт' if mode == 'register' else 'С возвращением' }}</h1>
+    <p class="muted">{{ 'Зарегистрируйся, чтобы создавать встречи и присоединяться к ним.' if mode == 'register' else 'Войди, чтобы продолжить искать компанию.' }}</p>
+    <form method="post" class="form-stack">
+      <label>Имя пользователя<input name="username" minlength="3" maxlength="24" required autocomplete="username" placeholder="Например, Alex"></label>
+      <label>Пароль<input name="password" type="password" minlength="8" required autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" placeholder="Не менее 8 символов"></label>
+      <button class="button primary full" type="submit">{{ 'Зарегистрироваться' if mode == 'register' else 'Войти' }}</button>
+    </form>
+    <p class="switch-auth">{% if mode == 'register' %}Уже есть аккаунт? <a href="{{ url_for('login') }}">Войти</a>{% else %}Впервые здесь? <a href="{{ url_for('register') }}">Создать аккаунт</a>{% endif %}</p>
+  </div>
+  <div class="auth-aside"><span class="big-star">✳</span><h2>Не обязательно<br>планировать в одиночку.</h2><p>Найди людей, которым интересно то же, что и тебе.</p></div>
+</div>
+{% endblock %}

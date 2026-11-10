@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Найди компанию{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">✳</span> Найди компанию</a>
+  <nav>
+    <a href="{{ url_for('index') }}">Найти встречу</a>
+    {% if current_user %}
+      <a href="{{ url_for('create') }}">Создать</a>
+      <a href="{{ url_for('profile') }}">Мои встречи</a>
+      <span class="user-chip">{{ current_user }}</span>
+      <a class="nav-quiet" href="{{ url_for('logout') }}">Выйти</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Войти</a>
+      <a class="nav-cta" href="{{ url_for('register') }}">Регистрация</a>
+    {% endif %}
+  </nav>
+</header>
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack">
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer">
+  <span>Найди компанию · учебный проект</span>
+  <span>Общайся уважительно и береги личные данные</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Новая встреча — Найди компанию{% endblock %}
+{% block content %}
+<div class="form-page">
+  <a class="back-link" href="{{ url_for('index') }}">← К встречам</a>
+  <div class="eyebrow">СОБЕРИ СВОЮ КОМПАНИЮ</div>
+  <h1>Создать встречу</h1>
+  <p class="muted">Расскажи, чем хочешь заняться, и укажи, когда удобно встретиться.</p>
+  <form method="post" class="form-card form-stack">
+    <label>Название встречи<input name="title" maxlength="70" required placeholder="Например, Ищем команду для настольных игр"></label>
+    <div class="two-col">
+      <label>Категория<select name="category" required>{% for c in categories %}<option>{{ c }}</option>{% endfor %}</select></label>
+      <label>Формат<select name="format" id="format" onchange="document.getElementById('place-wrap').style.display=this.value==='Очно'?'block':'none'"><option>Онлайн</option><option>Очно</option></select></label>
+    </div>
+    <label>Дата и время<input type="datetime-local" name="starts_at" required></label>
+    <div id="place-wrap" style="display:none"><label>Общественное место<input name="place" placeholder="Например, городская библиотека или парк"></label><p class="hint">Не указывай домашний адрес или точное местоположение частного лица.</p></div>
+    <label>Описание<textarea name="description" rows="4" required placeholder="Что планируете делать? Кому подойдёт встреча?"></textarea></label>
+    <label>Максимальное количество участников<input type="number" name="capacity" min="2" max="30" value="4" required></label>
+    <button class="button primary full" type="submit">Опубликовать встречу</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Найди компанию — встречи{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">ЛЮДИ • ИНТЕРЕСЫ • ОБЩИЕ ПЛАНЫ</div>
+    <h1>Хочешь чем-то заняться?<br><span>Найди компанию.</span></h1>
+    <p>Игры, прогулки, спорт или учёба. Найди встречу по интересам и удобному времени или создай свою.</p>
+    <a class="button primary" href="{{ url_for('create') }}">＋ Создать встречу</a>
+  </div>
+  <div class="hero-art">
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+    <div class="bubble bubble-main">✦</div>
+    <div class="bubble bubble-a">🎮</div><div class="bubble bubble-b">🏀</div>
+    <div class="bubble bubble-c">📚</div><div class="bubble bubble-d">🌿</div>
+    <div class="art-caption">Общие планы начинаются здесь</div>
+  </div>
+</section>
+
+<section class="section-heading">
+  <div><div class="eyebrow">ТВОЙ СЛЕДУЮЩИЙ ПЛАН</div><h2>Подходящие встречи</h2></div>
+  <span class="muted">{{ activities|length }} найдено</span>
+</section>
+
+<form class="filters" method="get">
+  <input name="q" value="{{ q }}" placeholder="Например, настольные игры">
+  <select name="category">
+    <option value="">Все интересы</option>
+    {% for c in categories %}<option value="{{ c }}" {% if selected_category == c %}selected{% endif %}>{{ c }}</option>{% endfor %}
+  </select>
+  <select name="format">
+    <option value="">Любой формат</option>
+    <option value="Онлайн" {% if selected_format == 'Онлайн' %}selected{% endif %}>Онлайн</option>
+    <option value="Очно" {% if selected_format == 'Очно' %}selected{% endif %}>Очно</option>
+  </select>
+  <button class="button dark" type="submit">Найти</button>
+</form>
+
+{% if activities %}
+<div class="card-grid">
+  {% for a in activities %}
+  <article class="activity-card">
+    <div class="card-top"><span class="category-tag">{{ a.category }}</span><span class="format-tag">{{ a.format }}</span></div>
+    <h3><a href="{{ url_for('detail', activity_id=a.id) }}">{{ a.title }}</a></h3>
+    <p class="description">{{ a.description }}</p>
+    <div class="meta"><span>◷ {{ a.starts_at|replace('T',' · ') }}</span><span>♙ {{ a.participant_count }}/{{ a.capacity }}</span></div>
+    <div class="card-bottom"><span class="creator">от {{ a.creator_name }}</span><a class="text-link" href="{{ url_for('detail', activity_id=a.id) }}">Подробнее →</a></div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><div class="empty-icon">✳</div><h3>Пока подходящих встреч нет</h3><p>Попробуй изменить фильтры или создай первую встречу.</p><a class="button primary" href="{{ url_for('create') }}">Создать встречу</a></div>
+{% endif %}
+<div class="safety-note"><strong>Небольшое напоминание:</strong> для очных встреч выбирайте общественные места. Не указывайте домашний адрес, телефон и другие личные данные в описании.</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Мои встречи — Найди компанию{% endblock %}
+{% block content %}
+<div class="section-heading profile-heading"><div><div class="eyebrow">ТВОЯ АКТИВНОСТЬ</div><h1>Мои встречи</h1><p class="muted">Встречи, которые ты создал или к которым присоединился.</p></div></div>
+{% if activities %}
+<div class="card-grid">
+{% for a in activities %}
+<article class="activity-card">
+  <div class="card-top"><span class="category-tag">{{ a.category }}</span><span class="format-tag">{{ a.format }}</span></div>
+  <h3><a href="{{ url_for('detail', activity_id=a.id) }}">{{ a.title }}</a></h3>
+  <p class="description">{{ a.description }}</p>
+  <div class="meta"><span>◷ {{ a.starts_at|replace('T',' · ') }}</span><span>♙ {{ a.participant_count }}/{{ a.capacity }}</span></div>
+  <div class="card-bottom"><span class="creator">от {{ a.creator_name }}</span><a class="text-link" href="{{ url_for('detail', activity_id=a.id) }}">Открыть →</a></div>
+</article>
+{% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><div class="empty-icon">✳</div><h3>Здесь пока пусто</h3><p>Создай встречу или присоединись к понравившейся.</p><a class="button primary" href="{{ url_for('index') }}">Посмотреть встречи</a></div>
+{% endif %}
+{% endblock %}

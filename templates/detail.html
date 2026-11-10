@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ activity.title }} — Найди компанию{% endblock %}
+{% block content %}
+<div class="detail-page">
+  <a class="back-link" href="{{ url_for('index') }}">← Ко всем встречам</a>
+  <article class="detail-card">
+    <div class="card-top"><span class="category-tag">{{ activity.category }}</span><span class="format-tag">{{ activity.format }}</span></div>
+    <h1>{{ activity.title }}</h1>
+    <p class="detail-description">{{ activity.description }}</p>
+    <div class="detail-meta">
+      <div><span class="meta-label">КОГДА</span><strong>{{ activity.starts_at|replace('T',' · ') }}</strong></div>
+      <div><span class="meta-label">ОРГАНИЗАТОР</span><strong>{{ activity.creator_name }}</strong></div>
+      <div><span class="meta-label">УЧАСТНИКИ</span><strong>{{ activity.participant_count }} из {{ activity.capacity }}</strong></div>
+      {% if activity.format == 'Очно' %}<div><span class="meta-label">МЕСТО</span><strong>{{ activity.place }}</strong></div>{% endif %}
+    </div>
+    <div class="participants"><h3>Участники</h3><div class="avatar-row">{% for p in people %}<span class="avatar" title="{{ p.username }}">{{ p.username[:1]|upper }}</span>{% endfor %}</div><p class="muted small">{{ people|length }} человек присоединилось</p></div>
+    {% if current_user %}
+      {% if activity.is_joined %}
+        {% if activity.creator_id == session.get('user_id') %}
+          <form method="post" action="{{ url_for('close_activity', activity_id=activity.id) }}"><button class="button danger full" type="submit">Закрыть встречу</button></form>
+        {% else %}
+          <form method="post" action="{{ url_for('leave', activity_id=activity.id) }}"><button class="button secondary full" type="submit">Покинуть встречу</button></form>
+        {% endif %}
+      {% elif not activity.is_full %}
+        <form method="post" action="{{ url_for('join', activity_id=activity.id) }}"><button class="button primary full" type="submit">Присоединиться</button></form>
+      {% else %}<div class="full-label">Свободных мест нет</div>{% endif %}
+      <form method="post" action="{{ url_for('report', activity_id=activity.id) }}" class="report-form"><input name="reason" placeholder="Причина жалобы" required minlength="5"><button class="text-link" type="submit">Пожаловаться</button></form>
+    {% else %}
+      <a class="button primary full" href="{{ url_for('login') }}">Войдите, чтобы присоединиться</a>
+    {% endif %}
+  </article>
+  <div class="safety-note"><strong>Безопасность:</strong> выбирайте общественные места, сообщайте близким о своих планах и не делитесь личными контактами или домашним адресом на странице встречи.</div>
+</div>
+{% endblock %}
